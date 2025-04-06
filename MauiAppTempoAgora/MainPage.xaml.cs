@@ -16,11 +16,11 @@ namespace MauiAppTempoAgora
         {
             try
             {
-                if(!string.IsNullOrEmpty(txt_cidade.Text))
+                if (!string.IsNullOrEmpty(txt_cidade.Text))
                 {
                     Tempo? t = await DataService.GetPrevisao(txt_cidade.Text);
 
-                    if (t != null) 
+                    if (t != null)
                     {
                         string dados_previsao = "";
 
@@ -29,22 +29,30 @@ namespace MauiAppTempoAgora
                                          $"Nascer do Sol: {t.sunrise} \n" +
                                          $"Por do Sol: {t.sunset} \n" +
                                          $"Temp Máx : {t.temp_max} \n" +
-                                         $"Temp Min: {t.temp_min} \n" ;
+                                         $"Temp Min: {t.temp_min}  \n" +
+                                         $"Visiblidade: {t.visibility} \n" +
+                                         $"Velocidade do vento: {t.speed} \n" +
+                                         $"Descrição do clima: {t.description} \n";
 
                         lbl_res.Text = dados_previsao;
 
                     }
                     else
                     {
-                        lbl_res.Text = "Sem dados de Previsão";
+                        await DisplayAlert("Cidade não existe", "Aprenda a escrever e tente mais uma vez.", "vou melhorar T_T");
                     }
 
-                } else
+                }
+                else
                 {
                     lbl_res.Text = "Preencha a cidade.";
                 }
-
             }
+            catch (HttpRequestException ex) // Captura erros de rede
+            {
+                await DisplayAlert("Sem Conexão", "Você está sem conexão com a internet. Pague seus boletos e tente novamente.", "OK");
+            }
+   
             catch (Exception ex)
             {
                 await DisplayAlert("ops", ex.Message, "Ok");
